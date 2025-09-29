@@ -1,0 +1,8 @@
+CREATE TABLE flight_seat (
+     id SERIAL PRIMARY KEY,
+     flight_id INT NOT NULL REFERENCES flight(id) ON DELETE CASCADE,
+     seat_id INT NOT NULL REFERENCES seat(id) ON DELETE CASCADE,
+     status VARCHAR(20) NOT NULL CHECK (status IN ('AVAILABLE', 'RESERVED', 'BOOKED')),
+     price DECIMAL(10,2) NOT NULL DEFAULT 0,
+     reserved_until TIMESTAMP NULL
+);

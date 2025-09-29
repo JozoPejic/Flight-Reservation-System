@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flight List - Flight Reservation System</title>
+    <link rel="stylesheet" href="/styles.css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            font-weight: 300;
+        }
+        
+        .flights-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .flight-card {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 10px;
+            padding: 20px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .flight-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .flight-route {
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .flight-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .detail-label {
+            font-size: 12px;
+            color: #666;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .detail-value {
+            color: #333;
+            font-size: 14px;
+            margin-top: 2px;
+        }
+        
+        .aircraft-info {
+            background: #e9ecef;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .aircraft-model {
+            font-weight: 600;
+            color: #495057;
+        }
+        
+        .aircraft-reg {
+            font-size: 12px;
+            color: #6c757d;
+        }
+        
+        .flight-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            display: inline-block;
+            text-align: center;
+        }
+        
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #5a6fd8;
+        }
+        
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #218838;
+        }
+        
+        .btn-info {
+            background: #17a2b8;
+            color: white;
+        }
+        
+        .btn-info:hover {
+            background: #138496;
+        }
+        
+        .nav-links {
+            text-align: center;
+            margin-top: 30px;
+        }
+        
+        .nav-link {
+            color: #667eea;
+            text-decoration: none;
+            margin: 0 15px;
+            padding: 10px 20px;
+            border: 2px solid #667eea;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link:hover {
+            background-color: #667eea;
+            color: white;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+        
+        .empty-state h3 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar" th:replace="~{home :: .navbar}"></nav>
+    <div class="container">
+        <h1>Flight List</h1>
+        
+        <div th:if="${#lists.isEmpty(flights)}" class="empty-state">
+            <h3>No flights found</h3>
+            <p>Add your first flight to get started.</p>
+        </div>
+        
+        <div th:if="${!#lists.isEmpty(flights)}" class="flights-grid">
+            <div th:each="flight : ${flights}" class="flight-card">
+                <div class="flight-route" th:text="${flight.flightNumber + ' - ' + flight.origin + ' → ' + flight.destination}">
+                    FR123 - Zagreb → London
+                </div>
+                
+                <div class="flight-details">
+                    <div class="detail-item">
+                        <span class="detail-label">Departure</span>
+                        <span class="detail-value" th:text="${#temporals.format(flight.departureTime, 'dd/MM/yyyy HH:mm')}">
+                            01/01/2024 10:00
+                        </span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Arrival</span>
+                        <span class="detail-value" th:text="${#temporals.format(flight.arrivalTime, 'dd/MM/yyyy HH:mm')}">
+                            01/01/2024 12:00
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="aircraft-info">
+                    <div class="aircraft-model" th:text="${flight.airplane.manufacturer + ' ' + flight.airplane.model}">
+                        Boeing 737
+                    </div>
+                    <div class="aircraft-reg" th:text="${flight.airplane.registrationNumber}">
+                        N123AB
+                    </div>
+                </div>
+                
+                <div class="flight-actions">
+                    <a th:href="@{'/admin/flights/' + ${flight.id} + '/seats'}" class="btn btn-primary">
+                        View Seats
+                    </a>
+                    <a th:href="@{'/admin/flights/edit/' + ${flight.id}}" class="btn btn-info">
+                        Edit
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="nav-links">
+            <a href="/" class="nav-link">Home</a>
+            <a href="/admin/flights" class="nav-link">Add Flight</a>
+            <a href="/admin/airplanes" class="nav-link">Add Airplane</a>
+            <a th:href="@{'/admin/flights/list'}" class="nav-link">Refresh</a>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flight Seats - Admin Panel</title>
+    <link rel="stylesheet" href="/styles.css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            font-weight: 300;
+        }
+        
+        .flight-info {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 4px solid #007bff;
+        }
+        
+        .flight-route {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .flight-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .detail-label {
+            font-weight: bold;
+            color: #666;
+            font-size: 0.9em;
+        }
+        
+        .detail-value {
+            color: #333;
+            font-size: 1.1em;
+        }
+        
+        .aircraft-info {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+        
+        .aircraft-model {
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .aircraft-reg {
+            color: #666;
+            font-family: monospace;
+        }
+        
+        .seat-class-container {
+            margin-bottom: 40px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            border: 1px solid #dee2e6;
+        }
+        
+        .seat-class-title {
+            text-align: center;
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #e9ecef;
+            border-radius: 8px;
+        }
+        
+        .seats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+            gap: 8px;
+            margin-bottom: 20px;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+        }
+        
+        .class-summary {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 15px;
+            padding: 15px;
+            background: #e9ecef;
+            border-radius: 8px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .class-summary span {
+            padding: 5px 10px;
+            background: white;
+            border-radius: 5px;
+            border: 1px solid #dee2e6;
+        }
+        
+        .seat {
+            width: 50px;
+            height: 50px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9em;
+            font-weight: bold;
+            cursor: default;
+            transition: all 0.2s ease;
+            margin: 2px;
+        }
+        
+        .seat.available {
+            background: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+        }
+        
+        .seat.reserved {
+            background: #fff3cd;
+            border-color: #ffeaa7;
+            color: #856404;
+        }
+        
+        .seat.booked {
+            background: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
+        
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            border: 2px solid;
+        }
+        
+        .legend-color.available {
+            background: #d4edda;
+            border-color: #c3e6cb;
+        }
+        
+        .legend-color.reserved {
+            background: #fff3cd;
+            border-color: #ffeaa7;
+        }
+        
+        .legend-color.booked {
+            background: #f8d7da;
+            border-color: #f5c6cb;
+        }
+        
+        .nav-links {
+            text-align: center;
+            margin-top: 30px;
+        }
+        
+        .nav-link {
+            display: inline-block;
+            margin: 0 10px;
+            padding: 10px 20px;
+            background: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background 0.2s ease;
+        }
+        
+        .nav-link:hover {
+            background: #0056b3;
+        }
+        
+        .error-message {
+            color: #dc3545;
+            text-align: center;
+            padding: 20px;
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar" th:replace="~{home :: .navbar}"></nav>
+    <div class="container">
+        <h1>Flight Seats - Admin Panel</h1>
+        
+        <div th:if="${error}" class="error-message" th:text="${error}">
+            Error message
+        </div>
+        
+        <div th:if="${flight}" class="flight-info">
+            <div class="flight-route" th:text="${flight.flightNumber + ' - ' + flight.origin + ' → ' + flight.destination}">
+                FR123 - Zagreb → London
+            </div>
+            
+            <div class="flight-details">
+                <div class="detail-item">
+                    <span class="detail-label">Departure</span>
+                    <span class="detail-value" th:text="${#temporals.format(flight.departureTime, 'dd/MM/yyyy HH:mm')}">
+                        01/01/2024 10:00
+                    </span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Arrival</span>
+                    <span class="detail-value" th:text="${#temporals.format(flight.arrivalTime, 'dd/MM/yyyy HH:mm')}">
+                        01/01/2024 12:00
+                    </span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Aircraft</span>
+                    <span class="detail-value" th:text="${flight.airplane.manufacturer + ' ' + flight.airplane.model}">
+                        Boeing 737
+                    </span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Registration</span>
+                    <span class="detail-value" th:text="${flight.airplane.registrationNumber}">
+                        N123AB
+                    </span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color available"></div>
+                <span>Available</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color reserved"></div>
+                <span>Reserved</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color booked"></div>
+                <span>Booked</span>
+            </div>
+        </div>
+        
+        <div th:each="seatClassEntry : ${seatsByClass}" class="seat-class-container">
+            <div class="seat-class-title" th:text="${seatClassEntry.key.name() + ' Class'}">
+                Economy Class
+            </div>
+            
+            <div th:each="rowEntry : ${seatsByClassRows[seatClassEntry.key]}" style="margin-bottom:8px;">
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <div style="width:40px; text-align:center; font-weight:bold; color:#666;" th:text="${rowEntry.key}">1</div>
+                    <div class="seats-grid" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(60px, 1fr)); gap:8px; flex:1;">
+                        <div th:each="flightSeat : ${rowEntry.value}"
+                             th:class="'seat ' + ${flightSeat.status.name().toLowerCase()}"
+                             th:data-seat-id="${flightSeat.id}"
+                             th:data-seat-number="${flightSeat.seat.seatNumber}"
+                             th:data-status="${flightSeat.status.name()}"
+                             th:text="${flightSeat.seat.seatNumber}">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="class-summary">
+                <span th:text="'Total seats: ' + ${#lists.size(seatClassEntry.value)}">Total seats: 20</span>
+                <span th:text="'Available: ' + ${#lists.size(seatClassEntry.value.?[status.name() == 'AVAILABLE'])}">Available: 15</span>
+                <span th:text="'Reserved: ' + ${#lists.size(seatClassEntry.value.?[status.name() == 'RESERVED'])}">Reserved: 3</span>
+                <span th:text="'Booked: ' + ${#lists.size(seatClassEntry.value.?[status.name() == 'BOOKED'])}">Booked: 2</span>
+            </div>
+        </div>
+        
+        <div class="nav-links">
+            <a href="/admin/flights/list" class="nav-link">Back to Flights</a>
+            <a href="/admin/flights" class="nav-link">Add Flight</a>
+            <a href="/admin/airplanes" class="nav-link">Add Airplane</a>
+            <a href="/" class="nav-link">Home</a>
+        </div>
+    </div>
+</body>
+</html>
