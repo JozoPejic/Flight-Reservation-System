@@ -58,9 +58,9 @@ Main entities:
  ## Main feature - Flight search
 <div style="display: flex; gap: 10px;">
 
-<img width="489" height="570" alt="slika" src="https://github.com/user-attachments/assets/f32f8886-71eb-4b5d-847a-c0ccbbe47d99" />
-<img width="492" height="636" alt="slika" src="https://github.com/user-attachments/assets/6d903595-5ff3-4414-a015-0d8083c5ce4a" />
-<img width="953" height="669" alt="slika" src="https://github.com/user-attachments/assets/9a2adae4-7415-4db7-b40b-d785240e8863" />
+<img width="300" alt="slika" src="https://github.com/user-attachments/assets/f32f8886-71eb-4b5d-847a-c0ccbbe47d99" />
+<img width="300"  alt="slika" src="https://github.com/user-attachments/assets/6d903595-5ff3-4414-a015-0d8083c5ce4a" />
+<img width="300"  alt="slika" src="https://github.com/user-attachments/assets/9a2adae4-7415-4db7-b40b-d785240e8863" />
 
 
 </div>
