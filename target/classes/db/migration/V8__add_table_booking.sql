@@ -1,0 +1,6 @@
+CREATE TABLE booking (
+     id SERIAL PRIMARY KEY,
+     user_id INT NOT NULL REFERENCES users(id),
+     booking_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+     status VARCHAR(20) NOT NULL CHECK (status IN ('PENDING', 'CONFIRMED', 'CANCELLED'))
+);
