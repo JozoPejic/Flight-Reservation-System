@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Airplane - Flight Reservation System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 0;
+        }
+        
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 15px 0;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .nav-menu {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+        
+        .nav-link {
+            color: #333;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .nav-link:hover {
+            background-color: #667eea;
+            color: white;
+        }
+        
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .dropdown-toggle {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: transform 0.2s ease;
+        }
+        
+        .dropdown-toggle:hover {
+            transform: translateY(-2px);
+        }
+        
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: white;
+            min-width: 200px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            z-index: 1001;
+            right: 0;
+            top: 100%;
+            margin-top: 5px;
+        }
+        
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        
+        .dropdown-content a {
+            color: #333;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            transition: background-color 0.3s ease;
+        }
+        
+        .dropdown-content a:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .main-content {
+            padding: 40px 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2.2em;
+            font-weight: 300;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+        }
+        
+        input[type="text"], input[type="number"], select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+            background-color: white;
+        }
+        
+        input[type="text"]:focus, input[type="number"]:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        select {
+            cursor: pointer;
+        }
+        
+        .error-message {
+            color: #e74c3c;
+            font-size: 14px;
+            margin-top: 5px;
+            padding: 5px 0;
+        }
+        
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .submit-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .nav-links {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .nav-link {
+            color: #667eea;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+        
+        .nav-link:hover {
+            text-decoration: underline;
+        }
+
+        .info-box {
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .info-box h3 {
+            color: #495057;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        .info-box p {
+            color: #6c757d;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">✈️ FlightReservation</div>
+            <div class="nav-menu">
+                <a href="/" class="nav-link">Home</a>
+                <a href="/booking/search" class="nav-link">Search Flights</a>
+
+                <div th:if="${#authentication == null or #authentication.name == 'anonymousUser'}">
+                    <a href="/auth/register" class="nav-link">Register</a>
+                    <a href="/auth/login" class="nav-link">Login</a>
+                </div>
+
+                <div th:if="${#authentication != null and #authentication.name != 'anonymousUser'}">
+                    <div class="dropdown">
+                        <button class="dropdown-toggle" th:text="${#authentication.name}">User</button>
+                        <div class="dropdown-content">
+                            <a href="/user/profile">My Profile</a>
+                            <a href="/user/bookings">My Bookings</a>
+                            <a href="/auth/logout" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
+                        </div>
+                    </div>
+
+                    <div th:if="${#authentication.authorities.![authority].contains('ROLE_ADMIN')}" class="dropdown">
+                        <button class="dropdown-toggle">Admin</button>
+                        <div class="dropdown-content">
+                            <a href="/admin/airplanes">Add Airplane</a>
+                            <a href="/admin/flights">Add Flight</a>
+                            <a href="/admin/flights/list">View Flights</a>
+                            <a href="/admin/bookings">View Bookings</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        <div class="container">
+        <h1>Add New Airplane</h1>
+        
+        <div th:if="${success}" class="success-message">
+            Avion uspješno dodan!
+        </div>
+        
+        <form th:action="@{/admin/airplanes}" th:object="${airplaneDto}" method="post">
+            <div class="form-group">
+                <label for="manufacturer">Manufacturer *:</label>
+                <input type="text" id="manufacturer" th:field="*{manufacturer}" placeholder="e.g., Boeing, Airbus" />
+                <div th:if="${#fields.hasErrors('manufacturer')}" th:errors="*{manufacturer}" class="error-message"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="model">Model:</label>
+                <input type="text" id="model" th:field="*{model}" placeholder="e.g., 737, A320" />
+                <div th:if="${#fields.hasErrors('model')}" th:errors="*{model}" class="error-message"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="type">Type *:</label>
+                <select id="type" th:field="*{type}">
+                    <option value="">Select airplane type</option>
+                    <option th:each="airplaneType : ${airplaneTypes}" 
+                            th:value="${airplaneType}" 
+                            th:text="${airplaneType}">
+                    </option>
+                </select>
+                <div th:if="${#fields.hasErrors('type')}" th:errors="*{type}" class="error-message"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="registrationNumber">Registration Number *:</label>
+                <input type="text" id="registrationNumber" th:field="*{registrationNumber}" placeholder="e.g., N123AB" />
+                <div th:if="${#fields.hasErrors('registrationNumber')}" th:errors="*{registrationNumber}" class="error-message"></div>
+            </div>
+
+            
+
+            <button type="submit" class="submit-btn">Add Airplane</button>
+        </form>
+        
+        <div class="nav-links">
+            <a href="/" class="nav-link">Home</a>
+            <a href="/admin/airplanes" class="nav-link">Add Another Airplane</a>
+        </div>
+    </div>
+
+    <form id="logout-form" th:action="@{/auth/logout}" method="post" style="display: none;">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+    </form>
+</body>
+</html>

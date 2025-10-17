@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Bookings</title>
+    <link rel="stylesheet" href="/styles.css" />
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background:#f5f7fb; padding:20px; }
+        .container { max-width: 1000px; margin: 0 auto; background:white; border-radius:12px; padding:24px; box-shadow:0 10px 30px rgba(0,0,0,0.08); }
+        h2 { margin-bottom:16px; }
+        table { width:100%; border-collapse: collapse; }
+        th, td { padding:10px; border-bottom:1px solid #e9ecef; text-align:left; }
+        th { background:#f8f9fa; }
+        a.btn { display:inline-block; padding:6px 12px; background:#667eea; color:white; border-radius:6px; text-decoration:none; }
+    </style>
+    </head>
+<body>
+    <nav class="navbar" th:replace="~{home :: .navbar}"></nav>
+    <div class="container">
+        <h2>My Bookings</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Total</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="b : ${bookings}">
+                    <td th:text="${b.id}">1</td>
+                    <td th:text="${#temporals.format(b.bookingDate, 'dd/MM/yyyy HH:mm')}">date</td>
+                    <td th:text="${b.status}">PENDING</td>
+                    <td th:text="'$' + ${b.totalPrice}">$0</td>
+                    <td>
+                        <a th:href="@{'/booking/details/' + ${b.id}}" class="btn">Details</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
+
+
