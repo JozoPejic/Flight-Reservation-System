@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Flight - Flight Reservation System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2.2em;
+            font-weight: 300;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+        }
+        
+        input[type="text"], input[type="datetime-local"], select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+            background-color: white;
+        }
+        
+        input[type="text"]:focus, input[type="datetime-local"]:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        select {
+            cursor: pointer;
+        }
+        
+        .error-message {
+            color: #e74c3c;
+            font-size: 14px;
+            margin-top: 5px;
+            padding: 5px 0;
+        }
+        
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .submit-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .nav-links {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .nav-link {
+            color: #667eea;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+        
+        .nav-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Add New Flight</h1>
+        
+        <div th:if="${success}" class="success-message">
+            Let uspješno dodan!
+        </div>
+        
+        <form th:action="@{/admin/flights}" th:object="${flightDto}" method="post">
+            <div class="form-group">
+                <label for="flightNumber">Flight Number *:</label>
+                <input type="text" id="flightNumber" th:field="*{flightNumber}" placeholder="e.g., FR123, LH456" />
+                <div th:if="${#fields.hasErrors('flightNumber')}" th:errors="*{flightNumber}" class="error-message"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="airplaneId">Airplane *:</label>
+                <select id="airplaneId" th:field="*{airplaneId}">
+                    <option value="">Select an airplane</option>
+                    <option th:each="airplane : ${airplanes}" 
+                            th:value="${airplane.id}" 
+                            th:text="${airplane.manufacturer + ' ' + airplane.model + ' (' + airplane.registrationNumber + ')'}">
+                    </option>
+                </select>
+                <div th:if="${#fields.hasErrors('airplaneId')}" th:errors="*{airplaneId}" class="error-message"></div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="origin">Origin *:</label>
+                    <input type="text" id="origin" th:field="*{origin}" placeholder="e.g., Zagreb, London" />
+                    <div th:if="${#fields.hasErrors('origin')}" th:errors="*{origin}" class="error-message"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="destination">Destination *:</label>
+                    <input type="text" id="destination" th:field="*{destination}" placeholder="e.g., Paris, New York" />
+                    <div th:if="${#fields.hasErrors('destination')}" th:errors="*{destination}" class="error-message"></div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="departureTime">Departure Time *:</label>
+                    <input type="datetime-local" id="departureTime" th:field="*{departureTime}" />
+                    <div th:if="${#fields.hasErrors('departureTime')}" th:errors="*{departureTime}" class="error-message"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="arrivalTime">Arrival Time *:</label>
+                    <input type="datetime-local" id="arrivalTime" th:field="*{arrivalTime}" />
+                    <div th:if="${#fields.hasErrors('arrivalTime')}" th:errors="*{arrivalTime}" class="error-message"></div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="basePrice">Base Price (Economy) *:</label>
+                <input type="text" id="basePrice" th:field="*{basePrice}" placeholder="e.g., 120.00" />
+                <div th:if="${#fields.hasErrors('basePrice')}" th:errors="*{basePrice}" class="error-message"></div>
+            </div>
+
+            <button type="submit" class="submit-btn">Add Flight</button>
+        </form>
+        
+        <div class="nav-links">
+            <a href="/" class="nav-link">Home</a>
+            <a href="/admin/airplanes" class="nav-link">Add Airplane</a>
+            <a href="/admin/flights" class="nav-link">Add Another Flight</a>
+        </div>
+    </div>
+</body>
+</html>
